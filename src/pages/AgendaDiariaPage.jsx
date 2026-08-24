@@ -43,7 +43,7 @@ export function AgendaDiariaPage() {
 
     return (
         <section className="space-y-6">
-            <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <PageHeader
                     title="Agenda diaria del establecimiento"
                     description="Distribución de citas de todos los artistas para el día seleccionado."
@@ -52,7 +52,7 @@ export function AgendaDiariaPage() {
                     type="date"
                     value={fecha}
                     onChange={(e) => setFecha(e.target.value)}
-                    className="w-auto"
+                    className="w-full sm:w-auto"
                 />
             </div>
 
@@ -83,14 +83,17 @@ export function AgendaDiariaPage() {
                     )}
 
                     {franjas.length > 0 && agenda.empleados.length > 0 && (
-                        <Card>
+                        <Card className="overflow-hidden">
+                            <p className="border-b bg-muted/40 px-3 py-1.5 text-xs text-muted-foreground sm:hidden">
+                                Desliza hacia los lados para ver a todos los artistas →
+                            </p>
                             <CardContent className="overflow-x-auto p-0">
-                                <table className="w-full min-w-[600px] border-collapse text-sm">
+                                <table className="w-full min-w-140 border-collapse text-xs sm:text-sm">
                                     <thead>
                                         <tr className="border-b bg-muted/40">
-                                            <th className="p-3 text-left font-medium">Hora</th>
+                                            <th className="sticky left-0 z-10 bg-muted/40 p-2 text-left font-medium sm:p-3">Hora</th>
                                             {agenda.empleados.map((empleado) => (
-                                                <th key={empleado.id} className="p-3 text-left font-medium">
+                                                <th key={empleado.id} className="p-2 text-left font-medium sm:p-3">
                                                     {empleado.usuario.nombre} {empleado.usuario.primerApellido}
                                                 </th>
                                             ))}
@@ -99,13 +102,13 @@ export function AgendaDiariaPage() {
                                     <tbody>
                                         {franjas.map((franja) => (
                                             <tr key={franja.desde} className="border-b last:border-0">
-                                                <td className="p-3 font-medium text-muted-foreground">
+                                                <td className="sticky left-0 z-10 bg-card p-2 font-medium text-muted-foreground sm:p-3">
                                                     {franja.desde} - {franja.hasta}
                                                 </td>
                                                 {agenda.empleados.map((empleado) => {
                                                     const estado = obtenerEstadoFranja(franja, empleado, agenda.restriccionesGenerales)
                                                     return (
-                                                        <td key={empleado.id} className="p-3">
+                                                        <td key={empleado.id} className="p-2 sm:p-3">
                                                             {estado.tipo === "disponible" && (
                                                                 <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
                                                                     <span className="h-2 w-2 rounded-full bg-emerald-500" /> Disponible

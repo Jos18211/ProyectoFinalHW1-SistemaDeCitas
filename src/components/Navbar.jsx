@@ -102,7 +102,7 @@ export function Navbar() {
 </div>
 
         
-            <h1 className="text-lg font-bold tracking-tight text-foreground md:text-xl">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
                 Palermo´s <span className="text-primary">Tattoo</span>
             </h1>
             </div>

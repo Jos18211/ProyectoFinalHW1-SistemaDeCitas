@@ -35,7 +35,7 @@ export function HomePage() {
                 </div>
 
                 <div className="space-y-4">
-                  <h1 className="text-5xl font-extrabold tracking-tighter text-foreground md:text-6xl">
+                  <h1 className="text-4xl font-extrabold tracking-tighter text-foreground sm:text-5xl md:text-6xl">
                     Palermo´s <span className="text-primary">Tattoo</span>
                   </h1>
                   <p className="max-w-xl text-lg leading-relaxed text-muted-foreground">
@@ -128,18 +128,18 @@ export function HomePage() {
             </Card>
           )}
 
-          <Card className="relative mt-6 border-border/60 bg-card/80 shadow-xl backdrop-blur">
-            <section className="mt-10 space-y-4">
+          <Card className="relative mt-6 hidden overflow-hidden border-border/60 bg-card/80 shadow-xl backdrop-blur sm:block">
+            <CardContent className="space-y-4 p-6 md:p-10">
               <div className="text-center">
-                <h1 className="text-4xl font-bold tracking-tight text-foreground">
+                <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
                   <span className="text-primary">Algunos de nuestros diseños</span>
-                </h1>
+                </h2>
                 <p className="text-muted-foreground">
                   Una muestra del trabajo realizado en el estudio.
                 </p>
               </div>
               <DesignStrip />
-            </section>
+            </CardContent>
           </Card>
         </section>
       </>

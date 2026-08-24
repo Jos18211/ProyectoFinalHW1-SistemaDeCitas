@@ -21,17 +21,15 @@ const SECUENCIA = [...IMAGENES, ...IMAGENES]
 
 export function DesignStrip() {
     return (
-        <div className="overflow-hidden py-16">
-            <div className="flex w-max -space-x-6 animate-marquee has-[img:hover]:[animation-play-state:paused]">
+        <div className="w-full max-w-full overflow-hidden py-8 sm:py-16">
+            <div className="flex w-max -space-x-3 animate-marquee has-[img:hover]:[animation-play-state:paused] sm:-space-x-6">
                 {SECUENCIA.map(({ src, rotacion }, i) => (
                     <img
-                    key={`${src}-${i}`}
-                    src={src}
-                    alt=""
-                    className={`relative z-0 h-56 w-40 shrink-0 rounded-2xl border-4 border-background object-cover shadow-xl transition-transform duration-300 ${rotacion} hover:z-20 hover:-translate-y-6 hover:scale-150 hover:rotate-0 hover:shadow-2xl`}
+                        key={`${src}-${i}`}
+                        src={src}
+                        alt=""
+                        className={`relative z-0 h-28 w-20 shrink-0 rounded-lg border-2 border-background object-cover shadow-lg transition-transform duration-300 sm:h-56 sm:w-40 sm:rounded-2xl sm:border-4 sm:shadow-xl ${rotacion} hover:z-20 hover:rotate-0 sm:hover:-translate-y-6 sm:hover:scale-150 sm:hover:shadow-2xl`}
                     />
-
-
                 ))}
             </div>
         </div>
