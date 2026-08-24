@@ -57,7 +57,17 @@ VITE_IMAGE_URL=http://localhost:3000/images
 | Cliente | `ana.cliente@correo.com` | `Tattoo123!` |
 | Cliente | `luis.cliente@correo.com` | `Tattoo123!` |
 
-*(Estos usuarios se crean mediante el script `datos_iniciales_estudio_tatuajes.sql`, que se ejecuta contra la base de datos del API después de su propio seeder.)*
+*(Estos usuarios se crean mediante el script [`datos_iniciales_estudio_tatuajes.sql`](./datos_iniciales_estudio_tatuajes.sql), que se ejecuta contra la base de datos del API después de su propio seeder.)*
+
+## Script de datos iniciales
+
+El archivo [`datos_iniciales_estudio_tatuajes.sql`](./datos_iniciales_estudio_tatuajes.sql) en la raíz del proyecto carga los datos de ejemplo para la temática de estudio de tatuajes: especialidades, empleados, servicios, servicios adicionales, horarios de atención, restricciones de horario y citas en distintos estados. No modifica la estructura de la base de datos ni toca los catálogos creados por el seeder del API (roles, estados de cita, días de la semana, tipos de restricción, usuario administrador) — solo inserta datos.
+
+Requisito: el seeder del API ya debe haberse ejecutado antes de correr este script.
+
+```bash
+mysql -u root -p citas < datos_iniciales_estudio_tatuajes.sql
+```
 
 ## Módulos principales
 
