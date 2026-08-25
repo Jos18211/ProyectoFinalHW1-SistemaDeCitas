@@ -6,6 +6,7 @@ import App from "./App.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import { HomePage } from "./pages/HomePage";
+import { PortafolioPage } from "./pages/PortafolioPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ProfilePage } from "./pages/ProfilePage";
@@ -54,6 +55,7 @@ createRoot(document.getElementById("root")).render(
         <Routes>
           <Route element={<App />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/portafolio" element={<PortafolioPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/demo-accesibilidad" element={<AccesibilidadDemoPage />} />
             <Route path="/registro" element={<RegisterPage />} />

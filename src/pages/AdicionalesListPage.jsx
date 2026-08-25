@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import toast from "react-hot-toast"
+import { RotateCcw, Search, X } from "lucide-react"
 
 import { PageHeader } from "../components/PageHeader"
 import { EstadoBadge } from "../components/EstadoBadge"
 import { Button } from "../components/ui/button"
 import { Card, CardContent } from "../components/ui/card"
 import { Alert } from "../components/ui/alert"
+import { Input } from "../components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { useAuth } from "../context/AuthContext"
 import { formatearMoneda } from "../lib/ticketPricing"
 import {
@@ -21,6 +24,31 @@ export function AdicionalesListPage() {
     const [adicionales, setAdicionales] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
+    const [busqueda, setBusqueda] = useState("")
+    const [estadoFiltro, setEstadoFiltro] = useState("todos")
+
+    const adicionalesFiltrados = useMemo(() => {
+        const termino = busqueda.trim().toLowerCase()
+        return adicionales.filter((adicional) => {
+            const coincideTermino =
+                !termino ||
+                adicional.nombre.toLowerCase().includes(termino) ||
+                adicional.descripcion?.toLowerCase().includes(termino)
+
+            const coincideEstado =
+                estadoFiltro === "todos" ||
+                (estadoFiltro === "activos" ? adicional.activo : !adicional.activo)
+
+            return coincideTermino && coincideEstado
+        })
+    }, [adicionales, busqueda, estadoFiltro])
+
+    const hayFiltrosActivos = busqueda !== "" || estadoFiltro !== "todos"
+
+    function limpiarFiltros() {
+        setBusqueda("")
+        setEstadoFiltro("todos")
+    }
 
     useEffect(() => {
         cargarAdicionales()
@@ -59,7 +87,7 @@ export function AdicionalesListPage() {
 
     return (
         <section className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <PageHeader
                     title="Servicios adicionales"
                     description="Extras que un cliente puede sumar a su cita."
@@ -71,14 +99,68 @@ export function AdicionalesListPage() {
                 )}
             </div>
 
+            {!error && adicionales.length > 0 && (
+                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                    <div className="relative max-w-sm flex-1 sm:min-w-55">
+                        <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <label htmlFor="busqueda-adicionales" className="sr-only">
+                            Buscar servicios adicionales por nombre o descripción
+                        </label>
+                        <Input
+                            id="busqueda-adicionales"
+                            type="search"
+                            placeholder="Buscar adicionales..."
+                            value={busqueda}
+                            onChange={(e) => setBusqueda(e.target.value)}
+                            className="pl-8 pr-8"
+                        />
+                        {busqueda && (
+                            <button
+                                type="button"
+                                onClick={() => setBusqueda("")}
+                                aria-label="Limpiar búsqueda"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        )}
+                    </div>
+
+                    <Select value={estadoFiltro} onValueChange={setEstadoFiltro}>
+                        <SelectTrigger aria-label="Filtrar por estado" className="w-full sm:w-48">
+                            <SelectValue placeholder="Estado" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="todos">Todos los estados</SelectItem>
+                            <SelectItem value="activos">Activos</SelectItem>
+                            <SelectItem value="inactivos">Inactivos</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    {hayFiltrosActivos && (
+                        <Button variant="ghost" size="sm" onClick={limpiarFiltros} className="gap-1.5">
+                            <RotateCcw className="h-4 w-4" />
+                            Limpiar filtros
+                        </Button>
+                    )}
+                </div>
+            )}
+
             {error && <Alert variant="destructive">{error}</Alert>}
 
             {!error && adicionales.length === 0 && (
                 <p className="text-muted-foreground">Todavía no hay servicios adicionales registrados.</p>
             )}
+            {!error && adicionales.length > 0 && adicionalesFiltrados.length === 0 && (
+                <p className="text-muted-foreground">
+                    {busqueda
+                        ? `Ningún adicional coincide con "${busqueda}".`
+                        : "Ningún adicional coincide con los filtros seleccionados."}
+                </p>
+            )}
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {adicionales.map((adicional) => (
+                {adicionalesFiltrados.map((adicional) => (
                     <Card key={adicional.id}>
                         <CardContent className="space-y-3 p-5">
                             <div className="flex items-start justify-between gap-2">

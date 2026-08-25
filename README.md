@@ -36,7 +36,10 @@ Crea un archivo `.env` en la raíz del proyecto (no se versiona) con:
 ```env
 VITE_API_URL=http://localhost:3000
 VITE_IMAGE_URL=http://localhost:3000/images
+VITE_GOOGLE_MAPS_API_KEY=tu_key_de_google_maps
 ```
+
+`VITE_GOOGLE_MAPS_API_KEY` se usa para el mapa embebido del footer (Maps Embed API). La key debe tener habilitada la "Maps Embed API" en Google Cloud Console y restricción por referrer HTTP hacia tu dominio.
 
 ## Roles del sistema
 

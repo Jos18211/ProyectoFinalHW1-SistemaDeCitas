@@ -6,7 +6,9 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { DesignStrip } from "@/components/DesignStrip";
 import { Avatar } from "@/components/Avatar";
+import { GoogleMapView } from "@/components/GoogleMapView";
 import { listarEmpleadosActivos } from "@/services/empleadosService";
+import { UBICACION_LAT, UBICACION_LNG, UBICACION_MAPS_URL } from "@/data/ubicacion";
 
 import dragonLogo from "@/assets/DragonLogo.PNG";
 
@@ -139,6 +141,36 @@ export function HomePage() {
                 </p>
               </div>
               <DesignStrip />
+            </CardContent>
+          </Card>
+
+          <Card className="relative mt-6 overflow-hidden border-border/60 bg-card/80 shadow-xl backdrop-blur">
+            <CardContent className="space-y-4 p-6 md:p-10">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+                  <span className="text-primary">Visítanos</span>
+                </h2>
+                <p className="text-muted-foreground">
+                  Encuéntranos en nuestro estudio.{" "}
+                  <a
+                    href={UBICACION_MAPS_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-primary hover:underline"
+                  >
+                    Ver cómo llegar
+                  </a>
+                </p>
+              </div>
+              <div className="overflow-hidden rounded-2xl border border-border">
+                <GoogleMapView
+                  lat={UBICACION_LAT}
+                  lng={UBICACION_LNG}
+                  zoom={15}
+                  titulo="Palermo´s Tattoo"
+                  className="h-66.5 w-full"
+                />
+              </div>
             </CardContent>
           </Card>
         </section>

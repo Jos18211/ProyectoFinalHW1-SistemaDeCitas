@@ -15,6 +15,7 @@ import {
     Menu,
     Moon,
     Sun,
+    Clapperboard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,6 +40,7 @@ const QUICK_ITEMS = [
 
 // El resto de secciones solo vive dentro del menú ☰
 const MENU_ITEMS = [
+    { to: "/portafolio", label: "Portafolio", icon: Clapperboard, roles: null },
     { to: "/servicios", label: "Servicios", icon: Briefcase, roles: "auth" },
     { to: "/adicionales", label: "Adicionales", icon: Tag, roles: "auth" },
     { to: "/horarios", label: "Horarios", icon: Clock, roles: "auth" },
@@ -90,7 +92,7 @@ export function Navbar() {
     );
 
     return (
-        <header className="sticky top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur-xl">
+        <header className="sticky top-0 z-50 border-b border-border bg-card/90 shadow-sm backdrop-blur-xl">
         <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
             <div className="flex items-center gap-3">
             <div className="flex h-24 w-24 items-center justify-center">
