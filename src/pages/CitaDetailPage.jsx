@@ -60,12 +60,20 @@ export function CitaDetailPage() {
         rol === "Administrador" ||
         (rol === "Empleado" && cita.empleadoId === usuario.empleado?.id)
 
+    // El API expone si el estado actual permite que el propio cliente cancele
+    // (ej. permiteCancelacionCliente); si el campo no viene, se usa "Pendiente"
+    // como respaldo para no romper la funcionalidad existente.
+    const permiteCancelacionCliente =
+        cita.estadoCita.permiteCancelacionCliente ??
+        cita.estadoCita.permiteCancelacion ??
+        (cita.estadoCita.nombre === "Pendiente")
+
     const puedeCancelar =
         cita.estadoCita.nombre !== "Cancelada" &&
         (
             rol === "Administrador" ||
             (rol === "Empleado" && cita.empleadoId === usuario.empleado?.id) ||
-            (rol === "Cliente" && cita.clienteId === usuario.id && cita.estadoCita.nombre === "Pendiente")
+            (rol === "Cliente" && cita.clienteId === usuario.id && permiteCancelacionCliente)
         )
 
     const puedeCambiarEstado =

@@ -23,10 +23,11 @@ export function ServiciosListPage() {
     const [error, setError] = useState("")
     const [busqueda, setBusqueda] = useState("")
     const [estadoFiltro, setEstadoFiltro] = useState("todos")
+    const [orden, setOrden] = useState("nombre-asc")
 
     const serviciosFiltrados = useMemo(() => {
         const termino = busqueda.trim().toLowerCase()
-        return servicios.filter((servicio) => {
+        const filtrados = servicios.filter((servicio) => {
             const coincideTermino =
                 !termino ||
                 servicio.nombre.toLowerCase().includes(termino) ||
@@ -38,7 +39,23 @@ export function ServiciosListPage() {
 
             return coincideTermino && coincideEstado
         })
-    }, [servicios, busqueda, estadoFiltro])
+
+        const ordenados = [...filtrados]
+        switch (orden) {
+            case "nombre-desc":
+                ordenados.sort((a, b) => b.nombre.localeCompare(a.nombre))
+                break
+            case "precio-asc":
+                ordenados.sort((a, b) => Number(a.precioBase) - Number(b.precioBase))
+                break
+            case "precio-desc":
+                ordenados.sort((a, b) => Number(b.precioBase) - Number(a.precioBase))
+                break
+            default:
+                ordenados.sort((a, b) => a.nombre.localeCompare(b.nombre))
+        }
+        return ordenados
+    }, [servicios, busqueda, estadoFiltro, orden])
 
     const hayFiltrosActivos = busqueda !== "" || estadoFiltro !== "todos"
 
@@ -124,6 +141,18 @@ export function ServiciosListPage() {
                             <SelectItem value="todos">Todos los estados</SelectItem>
                             <SelectItem value="activos">Activos</SelectItem>
                             <SelectItem value="inactivos">Inactivos</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <Select value={orden} onValueChange={setOrden}>
+                        <SelectTrigger aria-label="Ordenar por" className="w-full sm:w-48">
+                            <SelectValue placeholder="Ordenar por" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="nombre-asc">Nombre (A-Z)</SelectItem>
+                            <SelectItem value="nombre-desc">Nombre (Z-A)</SelectItem>
+                            <SelectItem value="precio-asc">Precio (menor a mayor)</SelectItem>
+                            <SelectItem value="precio-desc">Precio (mayor a menor)</SelectItem>
                         </SelectContent>
                     </Select>
 

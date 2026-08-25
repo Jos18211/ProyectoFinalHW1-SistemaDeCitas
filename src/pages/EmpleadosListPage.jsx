@@ -27,10 +27,11 @@ export function EmpleadosListPage() {
     const [busqueda, setBusqueda] = useState("")
     const [estadoFiltro, setEstadoFiltro] = useState("todos")
     const [especialidadFiltro, setEspecialidadFiltro] = useState("todas")
+    const [orden, setOrden] = useState("nombre-asc")
 
     const empleadosFiltrados = useMemo(() => {
         const termino = busqueda.trim().toLowerCase()
-        return empleados.filter((empleado) => {
+        const filtrados = empleados.filter((empleado) => {
             const coincideTermino =
                 !termino ||
                 [empleado.usuario.nombre, empleado.usuario.primerApellido, empleado.codigoEmpleado].some((campo) =>
@@ -46,7 +47,20 @@ export function EmpleadosListPage() {
 
             return coincideTermino && coincideEstado && coincideEspecialidad
         })
-    }, [empleados, busqueda, estadoFiltro, especialidadFiltro])
+
+        const ordenados = [...filtrados]
+        switch (orden) {
+            case "nombre-desc":
+                ordenados.sort((a, b) => b.usuario.nombre.localeCompare(a.usuario.nombre))
+                break
+            case "codigo-asc":
+                ordenados.sort((a, b) => a.codigoEmpleado.localeCompare(b.codigoEmpleado))
+                break
+            default:
+                ordenados.sort((a, b) => a.usuario.nombre.localeCompare(b.usuario.nombre))
+        }
+        return ordenados
+    }, [empleados, busqueda, estadoFiltro, especialidadFiltro, orden])
 
     const hayFiltrosActivos = busqueda !== "" || estadoFiltro !== "todos" || especialidadFiltro !== "todas"
 
@@ -150,6 +164,17 @@ export function EmpleadosListPage() {
                                     {especialidad.nombre}
                                 </SelectItem>
                             ))}
+                        </SelectContent>
+                    </Select>
+
+                    <Select value={orden} onValueChange={setOrden}>
+                        <SelectTrigger aria-label="Ordenar por" className="w-full sm:w-48">
+                            <SelectValue placeholder="Ordenar por" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="nombre-asc">Nombre (A-Z)</SelectItem>
+                            <SelectItem value="nombre-desc">Nombre (Z-A)</SelectItem>
+                            <SelectItem value="codigo-asc">Código de empleado</SelectItem>
                         </SelectContent>
                     </Select>
 

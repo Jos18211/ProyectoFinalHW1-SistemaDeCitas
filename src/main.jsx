@@ -76,9 +76,15 @@ createRoot(document.getElementById("root")).render(
                 <Route path="/horarios" element={<HorariosAtencionPage />} />
                 <Route path="/citas" element={<CitasListPage />} />
                 <Route path="/citas/:id" element={<CitaDetailPage />} />
+              </Route>
+
+              <Route
+                element={<ProtectedRoute rolesPermitidos={["Administrador", "Empleado"]} />}
+              >
                 <Route path="/citas/nueva" element={<CreateCitaPage />} />
                 <Route path="/citas/:id/editar" element={<EditCitaPage />} />
-                <Route path="/agenda-diaria" element={<AgendaDiariaPage />} />
+                <Route path="/restricciones" element={<RestriccionesListPage />} />
+                <Route path="/restricciones/:id" element={<RestriccionDetailPage />} />
               </Route>
 
               <Route
@@ -109,9 +115,7 @@ createRoot(document.getElementById("root")).render(
                   path="/empleados/:id/editar"
                   element={<EditEmpleadoPage />}
                 />
-                <Route path="/restricciones" element={<RestriccionesListPage />} />
-                
-                <Route path="/restricciones/:id" element={<RestriccionDetailPage />} />
+                <Route path="/agenda-diaria" element={<AgendaDiariaPage />} />
               </Route>
             </Route>
 

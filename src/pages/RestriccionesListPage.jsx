@@ -17,13 +17,24 @@ export function RestriccionesListPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
     const [estadoFiltro, setEstadoFiltro] = useState("todos")
+    const [orden, setOrden] = useState("fecha-desc")
 
     const restriccionesFiltradas = useMemo(() => {
-        if (estadoFiltro === "todos") return restricciones
-        return restricciones.filter((restriccion) =>
-            estadoFiltro === "activas" ? restriccion.activo : !restriccion.activo
-        )
-    }, [restricciones, estadoFiltro])
+        const filtradas =
+            estadoFiltro === "todos"
+                ? restricciones
+                : restricciones.filter((restriccion) =>
+                    estadoFiltro === "activas" ? restriccion.activo : !restriccion.activo
+                )
+
+        const ordenadas = [...filtradas]
+        if (orden === "fecha-asc") {
+            ordenadas.sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
+        } else {
+            ordenadas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+        }
+        return ordenadas
+    }, [restricciones, estadoFiltro, orden])
 
     useEffect(() => {
         async function cargar() {
@@ -60,6 +71,16 @@ export function RestriccionesListPage() {
                             <SelectItem value="todos">Todos los estados</SelectItem>
                             <SelectItem value="activas">Activas</SelectItem>
                             <SelectItem value="inactivas">Inactivas</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <Select value={orden} onValueChange={setOrden}>
+                        <SelectTrigger aria-label="Ordenar por" className="w-full sm:w-48">
+                            <SelectValue placeholder="Ordenar por" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="fecha-desc">Fecha (más reciente)</SelectItem>
+                            <SelectItem value="fecha-asc">Fecha (más antigua)</SelectItem>
                         </SelectContent>
                     </Select>
 

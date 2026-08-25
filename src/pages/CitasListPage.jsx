@@ -43,6 +43,7 @@ export function CitasListPage() {
     const [categoriaFiltro, setCategoriaFiltro] = useState("todas")
     const [artistaFiltro, setArtistaFiltro] = useState("todos")
     const [estadoFiltro, setEstadoFiltro] = useState("todos")
+    const [orden, setOrden] = useState("fecha-desc")
 
     const estadosDisponibles = useMemo(
         () => [...new Set(citas.map((cita) => cita.estadoCita.nombre))],
@@ -51,7 +52,7 @@ export function CitasListPage() {
 
     const citasFiltradas = useMemo(() => {
         const termino = busqueda.trim().toLowerCase()
-        return citas.filter((cita) => {
+        const filtradas = citas.filter((cita) => {
             const coincideTermino =
                 !termino ||
                 [
@@ -75,7 +76,27 @@ export function CitasListPage() {
 
             return coincideTermino && coincideCategoria && coincideArtista && coincideEstado
         })
-    }, [citas, busqueda, categoriaFiltro, artistaFiltro, estadoFiltro, mapaServicioEspecialidad])
+
+        function claveFechaHora(cita) {
+            return `${cita.fecha.slice(0, 10)}T${cita.horaInicio.slice(11, 19)}`
+        }
+
+        const ordenadas = [...filtradas]
+        switch (orden) {
+            case "fecha-asc":
+                ordenadas.sort((a, b) => claveFechaHora(a).localeCompare(claveFechaHora(b)))
+                break
+            case "costo-desc":
+                ordenadas.sort((a, b) => Number(b.costoTotal) - Number(a.costoTotal))
+                break
+            case "costo-asc":
+                ordenadas.sort((a, b) => Number(a.costoTotal) - Number(b.costoTotal))
+                break
+            default:
+                ordenadas.sort((a, b) => claveFechaHora(b).localeCompare(claveFechaHora(a)))
+        }
+        return ordenadas
+    }, [citas, busqueda, categoriaFiltro, artistaFiltro, estadoFiltro, orden, mapaServicioEspecialidad])
 
     const hayFiltrosActivos =
         busqueda !== "" || categoriaFiltro !== "todas" || artistaFiltro !== "todos" || estadoFiltro !== "todos"
@@ -226,6 +247,18 @@ export function CitasListPage() {
                             </Select>
                         </>
                     )}
+
+                    <Select value={orden} onValueChange={setOrden}>
+                        <SelectTrigger aria-label="Ordenar por" className="w-full sm:w-48">
+                            <SelectValue placeholder="Ordenar por" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="fecha-desc">Fecha (más reciente)</SelectItem>
+                            <SelectItem value="fecha-asc">Fecha (más antigua)</SelectItem>
+                            <SelectItem value="costo-desc">Costo (mayor a menor)</SelectItem>
+                            <SelectItem value="costo-asc">Costo (menor a mayor)</SelectItem>
+                        </SelectContent>
+                    </Select>
 
                     {hayFiltrosActivos && (
                         <Button variant="ghost" size="sm" onClick={limpiarFiltros} className="gap-1.5">
